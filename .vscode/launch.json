@@ -1,0 +1,21 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug: pull_upgrade_images.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/pull-upgrade-images/pull_upgrade_images.py",
+            "console": "integratedTerminal",
+            "args": [
+                "16.2.2",
+                "ce",
+                "-o",
+                "images.txt"
+            ]
+        }
+    ]
+}
