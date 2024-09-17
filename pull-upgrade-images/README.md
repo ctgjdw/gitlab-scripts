@@ -4,8 +4,8 @@
 
 ## Requirements
 
-- [Download ChromeDriver for Selenium](https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json)
-- Add the above `ChromeDriver` binary to your System Path, so that `chromedriver` can be called in your shell/terminal
+- [Download msedgedriver for Selenium](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
+- Add the above directory containing the `msedgedriver` binary to your PATH environment variable, so that `msedgedriver` can be called in your shell/terminal
 - `pip install poetry` and `poetry install` to install the dependencies
 
 ## To Run
@@ -14,3 +14,4 @@
 2. Run `poetry shell` to activate your environment
 3. Run `python pull_upgrade_images.py <GITLAB_VERSION> <"ce" / "ee">`, where `ce` is community edition and `ee` is enterprise edition
     1. `-o` / `--output-file` (optional) - to output the required images to a text file for your own docker download scripts to pull
+    2. `-r` / `--get-runner-image` (optional, default = False) - whether to get the gitlab ci-runner image as well. This will get only the final version's image
