@@ -1,0 +1,11 @@
+- name: Create ssh folder
+  file:
+    path: ~/.ssh
+    state: directory
+  delegate_to: localhost
+
+- name: Scan server for its public key and add key to known_hosts
+  shell: |
+    PUB_KEY=$(ssh-keyscan -H {{ inventory_hostname }})
+    echo $PUB_KEY >> ~/.ssh/known_hosts
+  delegate_to: localhost

@@ -1,0 +1,20 @@
+---
+- name: Pip install 'docker'
+  ansible.builtin.pip:
+    name: docker
+
+- name: Get gitlab container id
+  shell: docker ps | grep -E gitlab/gitlab-[ce] | awk '{print $1}'
+  register: container_id
+
+- ansible.builtin.debug:
+    var: container_id
+
+- name: Execute gitlab backup
+  community.docker.docker_container_exec:
+    container: "{{container_id.stdout}}"
+    command: touch hi
+  register: gitlab_backup_result
+
+- ansible.builtin.debug:
+    var: gitlab_backup_result

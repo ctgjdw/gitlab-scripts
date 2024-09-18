@@ -1,0 +1,11 @@
+services:
+  backup-gitlab:
+    build:
+      context: .
+      args:
+        - DOCKER_IMAGE=<DOCKER_IMAGE>
+        - PRIVATE_KEY_PATH=key.pem
+    volumes:
+      - ./playbooks:/ansible/playbooks
+      - ./hosts.yml:/ansible/hosts.yml
+      - ./key.pem:/ansible/key.pem
