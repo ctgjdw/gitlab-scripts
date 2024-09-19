@@ -1,0 +1,3 @@
+---
+docker_node_backup_dir: ~/gitlab/backup
+gitlab_backup_skip: ''

@@ -1,20 +1,27 @@
 ---
 - name: Pip install 'docker'
   ansible.builtin.pip:
-    name: docker
+      name: docker
 
 - name: Get gitlab container id
   shell: docker ps | grep -E gitlab/gitlab-[ce] | awk '{print $1}'
   register: container_id
 
-- ansible.builtin.debug:
-    var: container_id
+# - ansible.builtin.debug:
+#       var: container_id
 
 - name: Execute gitlab backup
   community.docker.docker_container_exec:
-    container: "{{container_id.stdout}}"
-    command: touch hi
-  register: gitlab_backup_result
+      container: '{{container_id.stdout}}'
+      command: gitlab-backup create SKIP={{gitlab_backup_skip}}
 
-- ansible.builtin.debug:
-    var: gitlab_backup_result
+- name: Create gitlab backup directory
+  file:
+      path: '{{gitlab_backup_dir}}'
+      state: directory
+
+- name: Copy gitlab secrets file to docker host
+  shell: docker cp {{container_id.stdout}}:/etc/gitlab/gitlab-secrets.json {{gitlab_backup_dir}}
+
+- name: Copy gitlab backup to docker host
+  shell: docker cp {{container_id.stdout}}:/var/opt/gitlab/backups {{gitlab_backup_dir}}
