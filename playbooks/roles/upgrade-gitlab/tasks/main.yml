@@ -1,0 +1,9 @@
+---
+- name: Get gitlab container id
+  shell: docker service ls | grep -E gitlab/gitlab-[ce] | awk '{print $1}'
+  register: container_id
+
+- name: Update docker swarm service
+  community.docker.docker_swarm_service:
+    name:
+    image:

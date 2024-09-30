@@ -1,0 +1,4 @@
+---
+# values: swarm/docker - swarm = Docker swarm, docker = vanilla docker/docker compose
+docker_deployment_mode: swarm
+gitlab_upgrade_version: ""
