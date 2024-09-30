@@ -1,0 +1,3 @@
+---
+gitlab_backup_dir: ~/gitlab/backup/{{ansible_date_time.date}}
+gitlab_backup_skip: ""
