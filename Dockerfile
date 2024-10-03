@@ -7,3 +7,5 @@ WORKDIR /ansible
 ARG PRIVATE_KEY_PATH="key.pem"
 
 COPY . /ansible/
+
+RUN chmod 400 ${PRIVATE_KEY_PATH}

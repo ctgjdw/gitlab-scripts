@@ -1,0 +1,14 @@
+- hosts: docker_host_node
+  vars_prompt:
+    - name: docker_swarm_service
+      prompt: What is the name of your docker swarm service?
+      private: no
+    - name: current_gitlab_image
+      prompt: What is the current image name? (include the registry and tag, i.e. docker.io/gitlab/gitlab-ce:16.2.2-ce.0)
+      private: no
+    - name: target_gitlab_image
+      prompt: What is the image name you want to upgrade to? (include the registry and tag, i.e. docker.io/gitlab/gitlab-ce:16.8.0-ce.0)
+      private: no
+  roles:
+    - backup-gitlab
+    - upgrade-gitlab

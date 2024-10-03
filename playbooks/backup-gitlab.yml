@@ -1,4 +1,0 @@
-- hosts: docker_host_node
-  gather_facts: false
-  roles:
-    - backup-gitlab

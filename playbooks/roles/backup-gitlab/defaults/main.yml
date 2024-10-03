@@ -1,3 +1,5 @@
 ---
 gitlab_backup_dir: ~/gitlab/backup/{{ansible_date_time.date}}
 gitlab_backup_skip: ""
+# copy creates a temp directory and takes up an extra 1x space
+gitlab_backup_strategy: copy

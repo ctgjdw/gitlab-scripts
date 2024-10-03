@@ -1,5 +1,5 @@
 services:
-  backup-gitlab:
+  upgrade-gitlab:
     build:
       context: .
       args:
@@ -10,3 +10,4 @@ services:
       - ./playbooks:/ansible/playbooks
       - ./hosts.yml:/ansible/hosts.yml
       - ./key.pem:/ansible/key.pem
+    entrypoint: ansible-playbook -i hosts.yml playbooks/upgrade-gitlab.yml

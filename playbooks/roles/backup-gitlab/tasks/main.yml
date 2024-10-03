@@ -4,24 +4,32 @@
     name: docker
 
 - name: Get gitlab container id
-  shell: docker ps | grep -E gitlab/gitlab-[ce] | awk '{print $1}'
+  shell: docker ps | grep {{docker_swarm_service}} | awk '{print $1}'
   register: container_id
-
-# - ansible.builtin.debug:
-#       var: container_id
-
-- name: Execute gitlab backup
-  community.docker.docker_container_exec:
-    container: "{{container_id.stdout}}"
-    command: gitlab-backup create SKIP={{gitlab_backup_skip}}
 
 - name: Create gitlab backup directory
   file:
     path: "{{gitlab_backup_dir}}"
     state: directory
 
-- name: Copy gitlab secrets file to docker host
-  shell: docker cp {{container_id.stdout}}:/etc/gitlab/gitlab-secrets.json {{gitlab_backup_dir}}
+- name: Backup /etc/gitlab file(s) to docker host
+  shell: docker cp {{container_id.stdout}}:/etc/gitlab/ {{gitlab_backup_dir}}/gitlab-configs/
 
-- name: Copy gitlab backup to docker host
-  shell: docker cp {{container_id.stdout}}:/var/opt/gitlab/backups {{gitlab_backup_dir}}
+- name: Execute gitlab backup
+  async: 14400
+  poll: 10
+  community.docker.docker_container_exec:
+    container: "{{container_id.stdout}}"
+    command: gitlab-backup create SKIP={{gitlab_backup_skip}} STRATEGY={{gitlab_backup_strategy}}
+  register: result
+
+- name: Dumping backup results into {{gitlab_backup_dir}}
+  ansible.builtin.blockinfile:
+    path: "{{gitlab_backup_dir}}/backup-result.txt"
+    block: "{{result}}"
+    create: true
+    marker: ""
+#
+# This is needed only if you do not persist /var/opt/gitlab in your volume/host/docker node
+# - name: Copy gitlab backup to docker host
+#   shell: docker cp {{container_id.stdout}}:/var/opt/gitlab/backups {{gitlab_backup_dir}}

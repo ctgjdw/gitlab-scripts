@@ -1,0 +1,28 @@
+---
+- name: Check background batched migrations are finished
+  shell: >
+    docker exec -it {{container_id.stdout}} gitlab-psql -c
+    "SELECT job_class_name, table_name, column_name, job_arguments
+    FROM batched_background_migrations WHERE status
+    NOT IN(3, 6);" | grep "(0 rows)"
+
+- name: Check there are no background migrations remaining
+  shell: >
+    docker exec -it {{container_id.stdout}} gitlab-rails runner -e production
+    'puts Gitlab::BackgroundMigration.remaining' | grep 0
+
+- name: Check background batched migrations has no queue
+  shell: >
+    docker exec -it {{container_id.stdout}} gitlab-rails runner -e production
+    'puts Gitlab::Database::BackgroundMigration::BatchedMigration.queued.count' | grep 0
+
+- name: Stop gitlab service
+  shell: docker service scale {{docker_swarm_service}}=0
+
+- name: Update image for gitlab service to {{target_gitlab_image}}
+  shell: docker service update {{docker_swarm_service}} --image {{target_gitlab_image}}
+
+- name: Start gitlab service
+  shell: docker service scale {{docker_swarm_service}}=1
+  async: 360
+  poll: 0
